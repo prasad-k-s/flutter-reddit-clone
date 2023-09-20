@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class Pallete {
@@ -23,9 +25,7 @@ class Pallete {
       backgroundColor: drawerColor,
     ),
     primaryColor: redColor,
-    colorScheme: const ColorScheme.dark(
-      background: drawerColor,
-    ), // will be used as alternative background color
+    backgroundColor: drawerColor, // will be used as alternative background color
   );
 
   static var lightModeAppTheme = ThemeData.light().copyWith(
@@ -42,8 +42,6 @@ class Pallete {
       backgroundColor: whiteColor,
     ),
     primaryColor: redColor,
-    colorScheme: const ColorScheme.light(
-      background: whiteColor,
-    ),
+    backgroundColor: whiteColor,
   );
 }
