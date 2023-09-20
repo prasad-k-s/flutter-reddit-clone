@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/constants/constants.dart';
+import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/theme/pallete.dart';
 
-class SignInButton extends StatelessWidget {
+class SignInButton extends ConsumerWidget {
   final bool isFromLogin;
   const SignInButton({Key? key, this.isFromLogin = true}) : super(key: key);
+  void signInWithGoogle(WidgetRef ref) {
+    ref.read(authControllerProvider).signInWithGoogle();
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: ElevatedButton.icon(
-        onPressed: () {},
+        onPressed: () => signInWithGoogle(ref),
         icon: Image.asset(
           Constants.googlePath,
           width: 35,
