@@ -35,9 +35,7 @@ class AuthRepository {
         FirebaseConstants.usersCollection,
       );
   Stream<User?> get authStateChange => _auth.authStateChanges();
-  
-  
-  
+
   FutureEither<UserModel> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -52,7 +50,7 @@ class AuthRepository {
       if (userCredential.additionalUserInfo!.isNewUser) {
         userModel = UserModel(
           name: userCredential.user?.displayName ?? 'Not entered',
-          profilePic: userCredential.user?.displayName ?? Constants.avatarDefault,
+          profilePic: userCredential.user?.photoURL ?? Constants.avatarDefault,
           banner: Constants.bannerDefault,
           uid: userCredential.user!.uid,
           isAuthenticated: true,
