@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-void showSnackbar(BuildContext context, String text) {
+void showSnackbar(
+    {required BuildContext context, required String text, required ContentType contentType, required String title}) {
   final snackBar = SnackBar(
     elevation: 0,
+    width: double.infinity,
+    dismissDirection: DismissDirection.horizontal,
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.transparent,
     content: AwesomeSnackbarContent(
-      title: 'On Snap!',
+      title: title,
       message: text,
-      contentType: ContentType.failure,
+      contentType: contentType,
     ),
   );
   if (context.mounted) {
