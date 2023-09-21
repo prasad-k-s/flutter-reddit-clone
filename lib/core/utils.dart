@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
@@ -20,4 +21,12 @@ void showSnackbar(
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+}
+
+Future<FilePickerResult?> pickImage() async {
+  final image = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+    allowMultiple: false,
+  );
+  return image;
 }

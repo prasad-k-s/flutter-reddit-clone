@@ -56,5 +56,7 @@
 		</array>
 	</dict>
 </array>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Need permission to pick images and videos</string>
 </dict>
 </plist>
