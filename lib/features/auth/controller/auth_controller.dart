@@ -44,7 +44,6 @@ class AuthController extends StateNotifier<bool> {
     user.fold(
       (failure) {
         showSnackbar(context: context, text: failure.message, contentType: ContentType.failure, title: 'Oh snap!');
-        
       },
       (userModel) {
         _ref.read(userProvider.notifier).update(
@@ -56,5 +55,11 @@ class AuthController extends StateNotifier<bool> {
 
   Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
+  }
+
+  Future<void> logout() async {
+    state = true;
+    await _authRepository.logOut();
+    state = false;
   }
 }
