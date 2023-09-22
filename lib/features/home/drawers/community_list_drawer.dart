@@ -23,6 +23,13 @@ class CommunityListDrawer extends ConsumerWidget {
       child: SafeArea(
         child: Column(
           children: [
+            const DrawerHeader(
+              child: Icon(
+                Icons.reddit,
+                size: 100,
+                color: Colors.white,
+              ),
+            ),
             ListTile(
               title: const Text('Create a community'),
               leading: const Icon(Icons.add),
