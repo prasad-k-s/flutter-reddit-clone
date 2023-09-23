@@ -27,7 +27,7 @@ class CommunityListDrawer extends ConsumerWidget {
               child: Icon(
                 Icons.reddit,
                 size: 100,
-                color: Colors.white,
+                color: Colors.deepOrangeAccent,
               ),
             ),
             ListTile(

@@ -18,6 +18,10 @@ class ProfileDrawer extends ConsumerWidget {
     Routemaster.of(context).push('/u/$uid');
   }
 
+  void toggleTheme(WidgetRef ref) {
+    ref.read(themeNotifierProvider.notifier).toggleTheme();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
@@ -64,16 +68,21 @@ class ProfileDrawer extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.dark_mode,
-                    color: Pallete.blueColor,
-                  ),
+                  ref.watch(themeNotifierProvider.notifier).mode == ThemeMode.dark
+                      ? Icon(
+                          Icons.dark_mode,
+                          color: Pallete.blueColor,
+                        )
+                      : Icon(
+                          Icons.light_mode,
+                          color: Pallete.blueColor,
+                        ),
                   const SizedBox(
                     width: 22,
                   ),
                   Switch.adaptive(
-                    value: true,
-                    onChanged: (value) {},
+                    value: ref.watch(themeNotifierProvider.notifier).mode == ThemeMode.dark,
+                    onChanged: (value) => toggleTheme(ref),
                   ),
                 ],
               ),
