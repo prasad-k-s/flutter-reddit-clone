@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class AddPostsScreen extends ConsumerWidget {
   const AddPostsScreen({super.key});
+
+  void naviagteToType(BuildContext context, String type) {
+    Routemaster.of(context).push('/add-post/$type');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,21 +23,21 @@ class AddPostsScreen extends ConsumerWidget {
           cardHeightWidth: cardHeightWidth,
           currentTheme: currentTheme,
           iconSize: iconSize,
-          onTap: () {},
+          onTap: () => naviagteToType(context, 'image'),
           iconData: Icons.image_outlined,
         ),
         MyCardWidget(
           cardHeightWidth: cardHeightWidth,
           currentTheme: currentTheme,
           iconSize: iconSize,
-          onTap: () {},
-          iconData: Icons.download_outlined,
+          onTap: () => naviagteToType(context, 'text'),
+          iconData: Icons.font_download_outlined,
         ),
         MyCardWidget(
           cardHeightWidth: cardHeightWidth,
           currentTheme: currentTheme,
           iconSize: iconSize,
-          onTap: () {},
+          onTap: () => naviagteToType(context, 'link'),
           iconData: Icons.link_outlined,
         ),
       ],
