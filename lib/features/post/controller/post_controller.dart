@@ -29,6 +29,10 @@ final userPostProvider = StreamProvider.family((ref, List<Community> communities
 
   return postController.fetchUserPosts(communities);
 });
+final getPostByIdProvider = StreamProvider.family((ref, String postId) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.getPostById(postId);
+});
 
 class PostController extends StateNotifier<bool> {
   final PostRepository _postRepository;
@@ -205,5 +209,19 @@ class PostController extends StateNotifier<bool> {
       (r) => showSnackbar(
           context: context, text: 'Post deleted successfully', contentType: ContentType.success, title: 'Success'),
     );
+  }
+
+  void upvote(Post post) async {
+    final uid = _ref.read(userProvider)!.uid;
+    _postRepository.upvote(post, uid);
+  }
+
+  void downvote(Post post) async {
+    final uid = _ref.read(userProvider)!.uid;
+    _postRepository.downvote(post, uid);
+  }
+
+  Stream<Post> getPostById(String postId) {
+    return _postRepository.getPostById(postId);
   }
 }

@@ -36,7 +36,7 @@ class FeedScreen extends ConsumerWidget {
                 ),
               );
             }
-            return ListView.builder(
+            return ListView.builder( 
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];

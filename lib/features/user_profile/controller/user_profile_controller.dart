@@ -6,17 +6,24 @@ import 'package:reddit_clone/core/storage_repository.dart';
 import 'package:reddit_clone/core/utils.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/user_profile/repository/user_profile_repository.dart';
+import 'package:reddit_clone/models/posrt_model.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:routemaster/routemaster.dart';
 
-final userProfileControllerProvider = StateNotifierProvider<UserProfileController, bool>((ref) {
-  final userProfileRepository = ref.watch(userProfileRepositoryProvider);
-  final storageRePository = ref.watch(storageRepositoryProvider);
-  return UserProfileController(
-    userProfileRepository: userProfileRepository,
-    ref: ref,
-    storageRePository: storageRePository,
-  );
+final userProfileControllerProvider = StateNotifierProvider<UserProfileController, bool>(
+  (ref) {
+    final userProfileRepository = ref.watch(userProfileRepositoryProvider);
+    final storageRePository = ref.watch(storageRepositoryProvider);
+    return UserProfileController(
+      userProfileRepository: userProfileRepository,
+      ref: ref,
+      storageRePository: storageRePository,
+    );
+  },
+);
+
+final getUserPostsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userProfileControllerProvider.notifier).getUserPost(uid);
 });
 
 class UserProfileController extends StateNotifier<bool> {
@@ -89,5 +96,9 @@ class UserProfileController extends StateNotifier<bool> {
         Routemaster.of(context).pop();
       }
     });
+  }
+
+  Stream<List<Post>> getUserPost(String uid) {
+    return _userProfileRepository.getUserPost(uid);
   }
 }

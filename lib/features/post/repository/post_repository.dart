@@ -72,4 +72,42 @@ class PostRepository {
       );
     }
   }
+
+  void upvote(Post post, String userID) async {
+    if (post.downvotes.contains(userID)) {
+      _posts.doc(post.id).update({
+        'downvotes': FieldValue.arrayRemove([userID]),
+      });
+    }
+    if (post.upvotes.contains(userID)) {
+      _posts.doc(post.id).update({
+        'upvotes': FieldValue.arrayRemove([userID]),
+      });
+    } else {
+      _posts.doc(post.id).update({
+        'upvotes': FieldValue.arrayUnion([userID]),
+      });
+    }
+  }
+
+  void downvote(Post post, String userID) async {
+    if (post.upvotes.contains(userID)) {
+      _posts.doc(post.id).update({
+        'upvotes': FieldValue.arrayRemove([userID]),
+      });
+    }
+    if (post.downvotes.contains(userID)) {
+      _posts.doc(post.id).update({
+        'downvotes': FieldValue.arrayRemove([userID]),
+      });
+    } else {
+      _posts.doc(post.id).update({
+        'downvotes': FieldValue.arrayUnion([userID]),
+      });
+    }
+  }
+
+  Stream<Post> getPostById(String postId) {
+    return _posts.doc(postId).snapshots().map((event) => Post.fromMap(event.data() as Map<String, dynamic>));
+  }
 }
