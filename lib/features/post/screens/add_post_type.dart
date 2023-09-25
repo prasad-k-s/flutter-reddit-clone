@@ -2,14 +2,18 @@
 
 import 'dart:io';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/common/error_text.dart';
+import 'package:reddit_clone/core/common/loader.dart';
 import 'package:reddit_clone/core/utils.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
+import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/theme/pallete.dart';
+import 'package:string_validator/string_validator.dart';
 
 class AddPostTypeScreen extends ConsumerStatefulWidget {
   const AddPostTypeScreen({required this.type, super.key});
@@ -47,9 +51,66 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
     }
   }
 
-  void sharePost() {
+  void sharePost(String isType) {
     final isValid = myKey.currentState!.validate();
-    if (isValid) {}
+    if (isValid) {
+      if (isType == 'image') {
+        if (bannerFile == null) {
+          showSnackbar(
+            context: context,
+            text: 'Please pick a banner image',
+            contentType: ContentType.warning,
+            title: 'Pick image',
+          );
+        } else if (communities.isEmpty) {
+          showSnackbar(
+            context: context,
+            text: 'You need to join a community to post',
+            contentType: ContentType.warning,
+            title: 'Join community',
+          );
+        } else {
+          ref.read(postControllerProvider.notifier).shareImagePost(
+                context: context,
+                title: titleController.text.trim(),
+                community: selectedCommunity ?? communities[0],
+                file: bannerFile,
+              );
+        }
+      } else if (isType == 'text') {
+        if (communities.isEmpty) {
+          showSnackbar(
+            context: context,
+            text: 'You need to join a community to post',
+            contentType: ContentType.warning,
+            title: 'Join community',
+          );
+        } else {
+          ref.read(postControllerProvider.notifier).shareTextPost(
+                context: context,
+                title: titleController.text.trim(),
+                community: selectedCommunity ?? communities[0],
+                description: desController.text.trim(),
+              );
+        }
+      } else if (isType == 'link') {
+        if (communities.isEmpty) {
+          showSnackbar(
+            context: context,
+            text: 'You need to join a community to post',
+            contentType: ContentType.warning,
+            title: 'Join community',
+          );
+        } else {
+          ref.read(postControllerProvider.notifier).shareLinkPost(
+                context: context,
+                title: titleController.text.trim(),
+                community: selectedCommunity ?? communities[0],
+                link: linkController.text.trim(),
+              );
+        }
+      }
+    }
   }
 
   @override
@@ -58,13 +119,18 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
     final isTypeImage = widget.type == 'image';
     final isTypeText = widget.type == 'text';
     final isTypeLink = widget.type == 'link';
+    final isLoading = ref.watch(postControllerProvider);
+
+    if (isLoading) {
+      return const Loader();
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('Post ${widget.type}'),
         actions: [
           TextButton(
-            onPressed: sharePost,
+            onPressed: () => sharePost(widget.type),
             child: const Text('Share'),
           ),
         ],
@@ -85,6 +151,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                   },
                   textInputAction: isTypeImage ? TextInputAction.done : TextInputAction.next,
                   controller: titleController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   maxLength: 30,
                   decoration: InputDecoration(
                     errorStyle: const TextStyle(
@@ -136,6 +203,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                   ),
                 if (isTypeText)
                   TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the description';
@@ -167,6 +235,9 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the link';
                       }
+                      if (!isURL(value)) {
+                        return 'Please enter a valid link';
+                      }
                       return null;
                     },
                     controller: desController,
@@ -174,6 +245,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                       FocusScope.of(context).unfocus();
                     },
                     textInputAction: TextInputAction.done,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       errorStyle: const TextStyle(
                         fontSize: 16,
@@ -241,15 +313,3 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
     );
   }
 }
-/*
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-     flutter_additional_ios_build_settings(target)
-      target.build_configurations.each do |config|
-        xcconfig_path = config.base_configuration_reference.real_path
-        xcconfig = File.read(xcconfig_path)
-        xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
-        File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
-      end
-  end
-end */
