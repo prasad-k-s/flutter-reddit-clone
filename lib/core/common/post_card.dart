@@ -40,6 +40,10 @@ class PostCard extends ConsumerWidget {
     Routemaster.of(context).push('/r/${post.communityName}');
   }
 
+  void navigateToComments(BuildContext context, String postId) {
+    Routemaster.of(context).push('/comments/$postId');
+  }
+
   void adminButton(BuildContext context) {
     showSnackbar(
       context: context,
@@ -235,7 +239,7 @@ class PostCard extends ConsumerWidget {
                                 Row(
                                   children: [
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () => navigateToComments(context, post.id),
                                       icon: const Icon(
                                         Icons.comment,
                                         size: 30,
@@ -282,6 +286,9 @@ class PostCard extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(
+            height: 10,
+          )
         ],
       ),
     );

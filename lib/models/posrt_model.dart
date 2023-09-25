@@ -147,6 +147,4 @@ class Post {
         createdAt.hashCode ^
         awards.hashCode;
   }
-
-
 }
