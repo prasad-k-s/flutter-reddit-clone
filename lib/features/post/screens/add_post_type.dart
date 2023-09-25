@@ -240,7 +240,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                       }
                       return null;
                     },
-                    controller: desController,
+                    controller: linkController,
                     onTapOutside: (event) {
                       FocusScope.of(context).unfocus();
                     },

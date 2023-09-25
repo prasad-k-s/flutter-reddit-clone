@@ -163,7 +163,7 @@ class PostController extends StateNotifier<bool> {
         commentCount: 0,
         username: user.name,
         uid: user.uid,
-        type: 'text',
+        type: 'image',
         createdAt: DateTime.now(),
         awards: [],
         link: r,
@@ -196,5 +196,14 @@ class PostController extends StateNotifier<bool> {
       return _postRepository.fetchUserPost(communities);
     }
     return Stream.value([]);
+  }
+
+  void deletePost(Post post, BuildContext context) async {
+    final res = await _postRepository.deletePost(post);
+    res.fold(
+      (l) => showSnackbar(context: context, text: l.message, contentType: ContentType.failure, title: 'Oh snap!'),
+      (r) => showSnackbar(
+          context: context, text: 'Post deleted successfully', contentType: ContentType.success, title: 'Success'),
+    );
   }
 }

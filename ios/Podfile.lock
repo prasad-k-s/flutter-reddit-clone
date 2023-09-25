@@ -840,6 +840,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - SwiftyGif (5.4.4)
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -850,6 +852,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -897,6 +900,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   abseil: 926fb7a82dc6d2b8e1f2ed7f3a718bce691d1e46
@@ -933,6 +938,7 @@ SPEC CHECKSUMS:
   SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
+  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
 PODFILE CHECKSUM: 97234ed6e6e47149c744bf83c755bb4bda5cf85b
 
