@@ -37,6 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final currentTheme = ref.watch(themeNotifierProvider);
     final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     final isLoading = ref.watch(authControllerProvider);
     if (isLoading) {
       return const Loader();
@@ -78,25 +79,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         title: const Text('Home'),
       ),
-      endDrawer: const ProfileDrawer(),
+      endDrawer: isGuest ? null : const ProfileDrawer(),
       drawer: const CommunityListDrawer(),
-      bottomNavigationBar: CupertinoTabBar(
-        activeColor: currentTheme.iconTheme.color,
-        // ignore: deprecated_member_use
-        backgroundColor: currentTheme.backgroundColor,
-        currentIndex: _page,
-        onTap: onTap,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: '',
-          )
-        ],
-      ),
+      bottomNavigationBar: isGuest
+          ? null
+          : CupertinoTabBar(
+              activeColor: currentTheme.iconTheme.color,
+              // ignore: deprecated_member_use
+              backgroundColor: currentTheme.backgroundColor,
+              currentIndex: _page,
+              onTap: onTap,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add),
+                  label: '',
+                )
+              ],
+            ),
       body: Constants.tabWidgets[_page],
     );
   }

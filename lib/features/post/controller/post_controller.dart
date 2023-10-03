@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +30,12 @@ final userPostProvider = StreamProvider.family((ref, List<Community> communities
   final postController = ref.watch(postControllerProvider.notifier);
 
   return postController.fetchUserPosts(communities);
+});
+
+final guestpostProvider = StreamProvider((ref) {
+  final postController = ref.watch(postControllerProvider.notifier);
+
+  return postController.fetchGuestPosts();
 });
 
 final getPostByIdProvider = StreamProvider.family((ref, String postId) {
@@ -219,6 +224,10 @@ class PostController extends StateNotifier<bool> {
       return _postRepository.fetchUserPost(communities);
     }
     return Stream.value([]);
+  }
+
+  Stream<List<Post>> fetchGuestPosts() {
+    return _postRepository.fetchGuestPost();
   }
 
   void deletePost(Post post, BuildContext context) async {

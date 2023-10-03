@@ -23,6 +23,8 @@ class CommunityScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uid = ref.watch(userProvider)?.uid;
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
         data: (community) {
@@ -75,27 +77,28 @@ class CommunityScreen extends ConsumerWidget {
                                 fontSize: 19,
                               ),
                             ),
-                            community.mods.contains(uid)
-                                ? OutlinedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 25,
-                                        ),
-                                        backgroundColor: Colors.grey.withOpacity(0.15),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                    onPressed: () => navigateToModTools(context),
-                                    child: const Text('Mod Tools'),
-                                  )
-                                : OutlinedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 25,
-                                        ),
-                                        backgroundColor: Colors.grey.withOpacity(0.15),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                    onPressed: () => joinCommunity(ref, context, community),
-                                    child: Text(community.members.contains(uid) ? 'Joined' : 'Join'),
-                                  ),
+                            if (!isGuest)
+                              community.mods.contains(uid)
+                                  ? OutlinedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 25,
+                                          ),
+                                          backgroundColor: Colors.grey.withOpacity(0.15),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                      onPressed: () => navigateToModTools(context),
+                                      child: const Text('Mod Tools'),
+                                    )
+                                  : OutlinedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 25,
+                                          ),
+                                          backgroundColor: Colors.grey.withOpacity(0.15),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                      onPressed: () => joinCommunity(ref, context, community),
+                                      child: Text(community.members.contains(uid) ? 'Joined' : 'Join'),
+                                    ),
                           ],
                         ),
                         Padding(

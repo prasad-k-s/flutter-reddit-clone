@@ -36,7 +36,7 @@ class AuthRepository {
       );
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
-  FutureEither<UserModel> signInWithGoogle() async {
+  FutureEither<UserModel> signInWithGoogle(bool isFormLogin) async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       final googleAuth = await googleUser?.authentication;
@@ -45,7 +45,12 @@ class AuthRepository {
         idToken: googleAuth?.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential;
+      if (isFormLogin) {
+        userCredential = await _auth.signInWithCredential(credential);
+      } else {
+        userCredential = await _auth.currentUser!.linkWithCredential(credential);
+      }
       UserModel userModel;
       if (userCredential.additionalUserInfo!.isNewUser) {
         userModel = UserModel(
@@ -55,7 +60,16 @@ class AuthRepository {
           uid: userCredential.user!.uid,
           isAuthenticated: true,
           karma: 0,
-          awards: <String>[],
+          awards: <String>[
+            'awesomeAns',
+            'gold',
+            'platinum',
+            'helpful',
+            'plusone',
+            'rocket',
+            'thankyou',
+            'til',
+          ],
         );
         await _users.doc(userCredential.user!.uid).set(
               userModel.toMap(),
@@ -63,6 +77,37 @@ class AuthRepository {
       } else {
         userModel = await getUserData(userCredential.user!.uid).first;
       }
+      return right(userModel);
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.message);
+      throw e.message ?? 'Something went wrong';
+    } catch (e) {
+      debugPrint(e.toString());
+      return left(
+        Failure(e.toString()),
+      );
+    }
+  }
+
+  FutureEither<UserModel> signInAsGuest() async {
+    try {
+      var userCredential = await _auth.signInAnonymously();
+
+      UserModel userModel;
+
+      userModel = UserModel(
+        name: 'Guest',
+        profilePic: Constants.avatarDefault,
+        banner: Constants.bannerDefault,
+        uid: userCredential.user!.uid,
+        isAuthenticated: false,
+        karma: 0,
+        awards: <String>[],
+      );
+      await _users.doc(userCredential.user!.uid).set(
+            userModel.toMap(),
+          );
+
       return right(userModel);
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/common/error_text.dart';
 import 'package:reddit_clone/core/common/loader.dart';
 import 'package:reddit_clone/core/common/post_card.dart';
+import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/features/post/widget/comment_card.dart';
 import 'package:reddit_clone/models/posrt_model.dart';
@@ -37,6 +38,8 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
   final myKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -52,37 +55,38 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
             child: Column(
               children: [
                 PostCard(post: post),
-                Form(
-                  key: myKey,
-                  child: TextFormField(
-                    controller: commentController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter something';
-                      }
-                      return null;
-                    },
-                    autofocus: true, 
-                    decoration: InputDecoration(
-                      errorStyle: const TextStyle(
-                        fontSize: 16,
-                      ),
-                      suffix: GestureDetector(
-                        onTap: () => addComment(post),
-                        child: const Text(
-                          'Post',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                if (!isGuest)
+                  Form(
+                    key: myKey,
+                    child: TextFormField(
+                      controller: commentController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter something';
+                        }
+                        return null;
+                      },
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        errorStyle: const TextStyle(
+                          fontSize: 16,
+                        ),
+                        suffix: GestureDetector(
+                          onTap: () => addComment(post),
+                          child: const Text(
+                            'Post',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
+                        hintText: 'what are your thoughts?',
+                        filled: true,
+                        border: InputBorder.none,
                       ),
-                      hintText: 'what are your thoughts?',
-                      filled: true,
-                      border: InputBorder.none,
                     ),
                   ),
-                ),
                 ref.watch(getPostCommentsProvider(widget.postId)).when(
                   data: (data) {
                     return SizedBox(
