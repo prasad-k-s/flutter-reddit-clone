@@ -275,6 +275,7 @@ class PostCard extends ConsumerWidget {
                                     return const CircularProgressIndicator.adaptive();
                                   },
                                 ),
+                                
                               ],
                             ),
                           ],
