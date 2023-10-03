@@ -30,9 +30,15 @@ final userPostProvider = StreamProvider.family((ref, List<Community> communities
 
   return postController.fetchUserPosts(communities);
 });
+
 final getPostByIdProvider = StreamProvider.family((ref, String postId) {
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.getPostById(postId);
+});
+
+final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.fetchPostComments(postId);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -237,15 +243,21 @@ class PostController extends StateNotifier<bool> {
       id: commentId,
       text: text,
       createdAt: DateTime.now(),
-      postId: post.uid,
-      username: user.name,
+      postId: post.id,
+      username: user.name, 
       profilePic: user.profilePic,
     );
     final res = await _postRepository.addComment(comment);
 
     res.fold(
-      (l) => showSnackbar(context: context, text: l.message, contentType: ContentType.failure, title: 'Oh snap!'),
+      (l) {
+        showSnackbar(context: context, text: l.message, contentType: ContentType.failure, title: 'Oh snap!');
+      },
       (r) => null,
     );
+  }
+
+  Stream<List<Comment>> fetchPostComments(String postId) {
+    return _postRepository.getCommentsOfPost(postId);
   }
 }
