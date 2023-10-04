@@ -7,6 +7,7 @@ import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/features/post/widget/comment_card.dart';
 import 'package:reddit_clone/models/posrt_model.dart';
+import 'package:reddit_clone/responsive/responsive.dart';
 
 class CommentsScreen extends ConsumerStatefulWidget {
   const CommentsScreen({required this.postId, super.key});
@@ -56,34 +57,36 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
               children: [
                 PostCard(post: post),
                 if (!isGuest)
-                  Form(
-                    key: myKey,
-                    child: TextFormField(
-                      controller: commentController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter something';
-                        }
-                        return null;
-                      },
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        errorStyle: const TextStyle(
-                          fontSize: 16,
-                        ),
-                        suffix: GestureDetector(
-                          onTap: () => addComment(post),
-                          child: const Text(
-                            'Post',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
+                  Responsive(
+                    child: Form(
+                      key: myKey,
+                      child: TextFormField(
+                        controller: commentController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter something';
+                          }
+                          return null;
+                        },
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          errorStyle: const TextStyle(
+                            fontSize: 16,
+                          ),
+                          suffix: GestureDetector(
+                            onTap: () => addComment(post),
+                            child: const Text(
+                              'Post',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
                             ),
                           ),
+                          hintText: 'what are your thoughts?',
+                          filled: true,
+                          border: InputBorder.none,
                         ),
-                        hintText: 'what are your thoughts?',
-                        filled: true,
-                        border: InputBorder.none,
                       ),
                     ),
                   ),

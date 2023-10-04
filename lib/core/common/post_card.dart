@@ -1,5 +1,6 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/common/error_text.dart';
@@ -80,7 +81,37 @@ class PostCard extends ConsumerWidget {
               ),
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (kIsWeb)
+                    Column(
+                      children: [
+                        IconButton(
+                          onPressed: isGuest ? null : () => upvotePost(ref),
+                          icon: Icon(
+                            Constants.up,
+                            size: 30,
+                            color: post.upvotes.contains(user.uid) ? Pallete.redColor : null,
+                          ),
+                        ),
+                        Text(
+                          post.upvotes.length - post.downvotes.length == 0
+                              ? 'Vote'
+                              : '${post.upvotes.length - post.downvotes.length}',
+                          style: const TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: isGuest ? null : () => downvotePost(ref),
+                          icon: Icon(
+                            Constants.down,
+                            size: 30,
+                            color: post.downvotes.contains(user.uid) ? Pallete.blueColor : null,
+                          ),
+                        ),
+                      ],
+                    ),
                   Expanded(
                     child: Column(
                       children: [
@@ -238,34 +269,35 @@ class PostCard extends ConsumerWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: isGuest ? null : () => upvotePost(ref),
-                                        icon: Icon(
-                                          Constants.up,
-                                          size: 30,
-                                          color: post.upvotes.contains(user.uid) ? Pallete.redColor : null,
+                                  if (!kIsWeb)
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: isGuest ? null : () => upvotePost(ref),
+                                          icon: Icon(
+                                            Constants.up,
+                                            size: 30,
+                                            color: post.upvotes.contains(user.uid) ? Pallete.redColor : null,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        post.upvotes.length - post.downvotes.length == 0
-                                            ? 'Vote'
-                                            : '${post.upvotes.length - post.downvotes.length}',
-                                        style: const TextStyle(
-                                          fontSize: 17,
+                                        Text(
+                                          post.upvotes.length - post.downvotes.length == 0
+                                              ? 'Vote'
+                                              : '${post.upvotes.length - post.downvotes.length}',
+                                          style: const TextStyle(
+                                            fontSize: 17,
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        onPressed: isGuest ? null : () => downvotePost(ref),
-                                        icon: Icon(
-                                          Constants.down,
-                                          size: 30,
-                                          color: post.downvotes.contains(user.uid) ? Pallete.blueColor : null,
+                                        IconButton(
+                                          onPressed: isGuest ? null : () => downvotePost(ref),
+                                          icon: Icon(
+                                            Constants.down,
+                                            size: 30,
+                                            color: post.downvotes.contains(user.uid) ? Pallete.blueColor : null,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
                                   Row(
                                     children: [
                                       IconButton(
