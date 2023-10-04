@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/common/loader.dart';
@@ -8,6 +9,7 @@ import 'package:reddit_clone/features/home/delegates/search_community_delegate.d
 import 'package:reddit_clone/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_clone/features/home/drawers/profile_drawer.dart';
 import 'package:reddit_clone/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -45,6 +47,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        title: const Text('Home'),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              onPressed: () => disPlayDrawer(context),
+              icon: const Icon(
+                Icons.menu,
+              ),
+            );
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -57,6 +70,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             icon: const Icon(Icons.search),
           ),
+          if (kIsWeb)
+            IconButton(
+              onPressed: () {
+                Routemaster.of(context).push('/add-post');
+              },
+              icon: const Icon(
+                Icons.add,
+              ),
+            ),
           Builder(builder: (context) {
             return IconButton(
               onPressed: () => disPlayEndDrawer(context),
@@ -67,21 +89,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             );
           }),
         ],
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              onPressed: () => disPlayDrawer(context),
-              icon: const Icon(
-                Icons.menu,
-              ),
-            );
-          },
-        ),
-        title: const Text('Home'),
       ),
       endDrawer: isGuest ? null : const ProfileDrawer(),
       drawer: const CommunityListDrawer(),
-      bottomNavigationBar: isGuest
+      bottomNavigationBar: isGuest || kIsWeb
           ? null
           : CupertinoTabBar(
               activeColor: currentTheme.iconTheme.color,

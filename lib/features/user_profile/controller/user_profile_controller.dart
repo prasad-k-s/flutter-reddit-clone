@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,14 +44,17 @@ class UserProfileController extends StateNotifier<bool> {
     required BuildContext context,
     required File? bannerFile,
     required String name,
+    required Uint8List? profileWebFile,
+    required Uint8List? bannerWebFile,
   }) async {
     state = true;
     UserModel user = _ref.read(userProvider)!;
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       final result = await _storageRePository.storeFile(
         path: 'users/profile',
         id: user.uid,
         file: profileFile,
+        webFile: profileWebFile,
       );
       result.fold(
         (l) => showSnackbar(
@@ -64,11 +68,12 @@ class UserProfileController extends StateNotifier<bool> {
         ),
       );
     }
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       final result = await _storageRePository.storeFile(
         path: 'users/banner',
         id: user.uid,
         file: bannerFile,
+        webFile: bannerWebFile,
       );
       result.fold(
         (l) => showSnackbar(

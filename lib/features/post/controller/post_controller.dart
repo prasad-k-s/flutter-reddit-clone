@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -162,6 +163,7 @@ class PostController extends StateNotifier<bool> {
     required String title,
     required Community community,
     required File? file,
+    required Uint8List? webFile,
   }) async {
     state = true;
     String postId = const Uuid().v1();
@@ -170,6 +172,7 @@ class PostController extends StateNotifier<bool> {
       path: 'posts/${community.name}',
       id: postId,
       file: file,
+      webFile: webFile,
     );
     imageRes.fold(
         (l) => showSnackbar(

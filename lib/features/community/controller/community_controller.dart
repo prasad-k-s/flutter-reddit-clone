@@ -1,7 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -95,13 +95,16 @@ class CommunityController extends StateNotifier<bool> {
     required File? profileFile,
     required BuildContext context,
     required File? bannerFile,
+    required Uint8List? bannerWebFile,
+    required Uint8List? profileWebFile,
   }) async {
     state = true;
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       final result = await _storageRePository.storeFile(
         path: 'communities/profile',
         id: community.name,
         file: profileFile,
+        webFile: profileWebFile,
       );
       result.fold(
         (l) => showSnackbar(
@@ -115,11 +118,12 @@ class CommunityController extends StateNotifier<bool> {
         ),
       );
     }
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       final result = await _storageRePository.storeFile(
         path: 'communities/banner',
         id: community.name,
         file: bannerFile,
+        webFile: bannerWebFile,
       );
       result.fold(
         (l) => showSnackbar(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
+import 'package:reddit_clone/responsive/responsive.dart';
 
 class CreateCommunityScreen extends ConsumerStatefulWidget {
   const CreateCommunityScreen({super.key});
@@ -36,72 +37,74 @@ class _CreateCommunityScreenState extends ConsumerState<CreateCommunityScreen> {
         title: const Text('Create a community'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Community name',
-                style: TextStyle(
-                  fontSize: 17,
+        child: Responsive(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Form(
-                key: myKey,
-                child: TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the community name';
-                    }
-                    return null;
-                  },
-                  controller: _communityNameController,
-                  decoration: const InputDecoration(
-                    errorStyle: TextStyle(
-                      fontSize: 14,
-                    ),
-                    hintText: 'r/community_name',
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
+                const Text(
+                  'Community name',
+                  style: TextStyle(
+                    fontSize: 17,
                   ),
-                  maxLength: 21,
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                const SizedBox(
+                  height: 10,
+                ),
+                Form(
+                  key: myKey,
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the community name';
+                      }
+                      return null;
+                    },
+                    controller: _communityNameController,
+                    decoration: const InputDecoration(
+                      errorStyle: TextStyle(
+                        fontSize: 14,
+                      ),
+                      hintText: 'r/community_name',
+                      filled: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(18),
                     ),
-                    minimumSize: const Size(double.infinity, 50),
+                    maxLength: 21,
                   ),
-                  onPressed: isLoading ? null : createCommunity,
-                  child: isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : const Text(
-                          'Create community',
-                          style: TextStyle(
-                            fontSize: 18,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    onPressed: isLoading ? null : createCommunity,
+                    child: isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text(
+                            'Create community',
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
                           ),
-                        ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

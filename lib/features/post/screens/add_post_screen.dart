@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/theme/pallete.dart';
@@ -12,9 +13,22 @@ class AddPostsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double cardHeightWidth = 120;
-    double iconSize = 60;
+    double cardHeightWidth = kIsWeb ? 360 : 120;
+    double iconSize = kIsWeb ? 120 : 60;
     final currentTheme = ref.watch(themeNotifierProvider);
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: myRow(cardHeightWidth, currentTheme, iconSize, context),
+        ),
+      );
+    }
+    return myRow(cardHeightWidth, currentTheme, iconSize, context);
+  }
+
+  Row myRow(double cardHeightWidth, ThemeData currentTheme, double iconSize, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
