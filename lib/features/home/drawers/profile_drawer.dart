@@ -8,10 +8,10 @@ class ProfileDrawer extends ConsumerWidget {
   const ProfileDrawer({super.key});
 
   void logOut(WidgetRef ref, BuildContext context) async {
+    await ref.read(authControllerProvider.notifier).logout();
     if (context.mounted) {
       Routemaster.of(context).pop();
     }
-    await ref.read(authControllerProvider.notifier).logout();
   }
 
   void navigateToUserProfile(BuildContext context, String uid) {
