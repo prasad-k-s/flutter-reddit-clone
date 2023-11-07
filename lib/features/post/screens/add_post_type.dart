@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
+// import 'package:any_link_preview/any_link_preview.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
@@ -253,6 +254,9 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                         if (!isURL(value)) {
                           return 'Please enter a valid link';
                         }
+                        // if (!(AnyLinkPreview.isValidLink(value))) {
+                        //   return 'This link is either not supported or broken';
+                        // }
                         return null;
                       },
                       controller: linkController,

@@ -1,7 +1,8 @@
-import 'package:any_link_preview/any_link_preview.dart';
+// import 'package:any_link_preview/any_link_preview.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_link_previewer/flutter_link_previewer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/common/error_text.dart';
 import 'package:reddit_clone/core/constants/constants.dart';
@@ -213,48 +214,51 @@ class PostCard extends ConsumerWidget {
                                   ),
                                 ),
                               if (isTypeLink)
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
-                                  child: AnyLinkPreview(
-                                    placeholderWidget: const SizedBox(
-                                      height: 160,
-                                      width: double.infinity,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.deepOrangeAccent,
-                                        ),
-                                      ),
-                                    ),
-                                    errorWidget: SizedBox(
-                                      height: 160,
-                                      width: double.infinity,
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.error,
-                                              color: Pallete.redColor,
-                                              size: 40,
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              'Error loading link',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                color: Pallete.redColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    displayDirection: UIDirection.uiDirectionHorizontal,
-                                    link: post.link!,
-                                  ),
+                                LinkPreviewWidget(
+                                  url: post.link!,
                                 ),
+                              // Padding(
+                              //   padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
+                              //   child: AnyLinkPreview(
+                              //     placeholderWidget: const SizedBox(
+                              //       height: 160,
+                              //       width: double.infinity,
+                              //       child: Center(
+                              //         child: CircularProgressIndicator(
+                              //           color: Colors.deepOrangeAccent,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     errorWidget: SizedBox(
+                              //       height: 160,
+                              //       width: double.infinity,
+                              //       child: Center(
+                              //         child: Row(
+                              //           mainAxisAlignment: MainAxisAlignment.center,
+                              //           children: [
+                              //             Icon(
+                              //               Icons.error,
+                              //               color: Pallete.redColor,
+                              //               size: 40,
+                              //             ),
+                              //             const SizedBox(
+                              //               width: 10,
+                              //             ),
+                              //             Text(
+                              //               'Error loading link',
+                              //               style: TextStyle(
+                              //                 fontSize: 20,
+                              //                 color: Pallete.redColor,
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     displayDirection: UIDirection.uiDirectionHorizontal,
+                              //     link: post.link!,
+                              //   ),
+                              // ),
                               if (isTypeText)
                                 Container(
                                   alignment: Alignment.bottomLeft,
@@ -393,6 +397,34 @@ class PostCard extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LinkPreviewWidget extends StatefulWidget {
+  const LinkPreviewWidget({
+    super.key,
+    required this.url,
+  });
+  final String url;
+  @override
+  State<LinkPreviewWidget> createState() => _LinkPreviewWidgetState();
+}
+
+class _LinkPreviewWidgetState extends State<LinkPreviewWidget> {
+  dynamic dataLink;
+  @override
+  Widget build(BuildContext context) {
+    return LinkPreview(
+      enableAnimation: true,
+      onPreviewDataFetched: (data) {
+        setState(() {
+          dataLink = data;
+        });
+      },
+      previewData: dataLink, // Pass the preview data from the state
+      text: widget.url,
+      width: MediaQuery.of(context).size.width,
     );
   }
 }
